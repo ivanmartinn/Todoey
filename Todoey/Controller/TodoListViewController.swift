@@ -12,26 +12,28 @@ class TodoListViewController: UITableViewController {
 
 //    var itemArray : [String] = [String]()
     var itemArray = [Item]()
-    let userDefault = UserDefaults.standard
+    
+    //user default only for basic and certain amount of data
+//    let userDefault = UserDefaults.standard
+    
+    //fileManager method
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        //testing
-//        let newItem = Item()
-//        newItem.title = "Wake up at 8"
-//        self.itemArray.append(newItem)
-//
-//        let newItem2 = Item()
-//        newItem2.title = "Eat Breakfast"
-//        self.itemArray.append(newItem2)
-//
-//        let newItem3 = Item()
-//        newItem3.title = "Turn on Working laptop"
-//        self.itemArray.append(newItem3)
-        if let items = userDefault.array(forKey: "ToDoList") as? [Item]{
-            itemArray = items
-        }
+        
+        //get path of filemanager
+//        print("\(String(describing: dataFilePath))")
+        
+        //get data using filemanager method below
+        loadItems()
+        
+        //get data user default(value will be not inside document but /library/preferences)
+//        if let items = userDefault.array(forKey: "ToDoList") as? [Item]{
+//            itemArray = items
+//        }
+        
     }
 
     //MARK: - TableView Datasource Methods
@@ -71,7 +73,7 @@ class TodoListViewController: UITableViewController {
 //        }else{
 //            itemArray[indexPath.row].done = false
 //        }
-        tableView.reloadData()
+        saveItems()
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
@@ -90,8 +92,11 @@ class TodoListViewController: UITableViewController {
                 let newItem = Item()
                 newItem.title = textField.text!
                 self.itemArray.append(newItem)
-                self.userDefault.set(self.itemArray, forKey: "ToDoList")
-                self.tableView.reloadData()
+                //save data using user defaults
+//                self.userDefault.set(self.itemArray, forKey: "ToDoList")
+                
+                //using filemanager method below
+                self.saveItems()
             }
         }
         alert.addTextField { (alertTextField) in
@@ -101,5 +106,33 @@ class TodoListViewController: UITableViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+    
+    //MARK: - Model manipulation methods
+    func saveItems(){
+        //save data using filemanager method
+        let encoder = PropertyListEncoder()
+        do{
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        }catch{
+            print("Error encoding item array, \(error)")
+        }
+        
+        tableView.reloadData()
+        
+    }
+    
+    func loadItems(){
+        //get data using filemanager
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do{
+                itemArray = try decoder.decode([Item].self, from: data)
+            }catch{
+                print("Error decoding item array, \(error)")
+            }
+        }
+    }
+    
 }
 
