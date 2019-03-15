@@ -14,6 +14,13 @@ class TodoListViewController: UITableViewController{
 //    var itemArray : [String] = [String]()//user defaults cannot hold object
     var itemArray = [Item]()//class if filemanager or entity core data.
     
+    //get data from previous controller
+    var selectedCategory : Category? {
+        didSet{
+            loadItems()
+        }
+    }
+    
     //user default only for basic and certain amount of data
 //    let userDefault = UserDefaults.standard
     
@@ -27,11 +34,14 @@ class TodoListViewController: UITableViewController{
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        //get path of filemanager (in document)/core data not inside doc but library/application support
+        //get path of filemanager (in document)/core data are not inside doc but library/application support
 //        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         
-        //get data using filemanager/ core data method below
-        loadItems()
+        //get data using filemanager method below
+//        loadItem()
+        
+        //for coredata
+//        loadItems()//disabled because of category. unless if you want to display whole list
         
         //get data user default(value will be not inside document but /library/preferences)
 //        if let items = userDefault.array(forKey: "ToDoList") as? [Item]{
@@ -97,7 +107,7 @@ class TodoListViewController: UITableViewController{
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
         var textField = UITextField()
-        let alert = UIAlertController(title: "Add New Todoey", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
 //            print(textField.text!)
             if textField.text != nil && textField.text != ""{
@@ -113,6 +123,10 @@ class TodoListViewController: UITableViewController{
                 newItem.done = false //dont have default value like class
                 
                 newItem.title = textField.text!
+                
+                //relationship
+                newItem.parentCategory = self.selectedCategory
+                
                 self.itemArray.append(newItem)
                 //save data using user defaults
 //                self.userDefault.set(self.itemArray, forKey: "ToDoList")
@@ -154,7 +168,7 @@ class TodoListViewController: UITableViewController{
     }
     
     //get data using filemanager
-    /*func loadItems(){
+    /*func loadItem(){
         if let data = try? Data(contentsOf: dataFilePath!) {
             let decoder = PropertyListDecoder()
             do{
@@ -166,9 +180,18 @@ class TodoListViewController: UITableViewController{
     }*/
     
     //load data using core data
-    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest()){
+    func loadItems(with request : NSFetchRequest<Item> = Item.fetchRequest(), and predicate : NSPredicate? = nil){
         /*func name(external iternal : type = default value
         external is used when calling the func while internal is a variable used inside the func*/
+        
+        //forceunwrap because new view controller will be redirect from selectedCategory
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        if let additonalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additonalPredicate])
+        }
+        else{
+            request.predicate = categoryPredicate
+        }
         
         do{
             itemArray = try context.fetch(request)
@@ -189,7 +212,8 @@ extension TodoListViewController: UISearchBarDelegate{
         request.predicate = predicate
         let sortDescriptor = NSSortDescriptor(key: "title", ascending: true)
         request.sortDescriptors = [sortDescriptor]
-        loadItems(with: request)
+//        loadItems(with: request)
+        loadItems(with: request, and: predicate)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
