@@ -7,6 +7,7 @@
 //
 
 import Foundation
+//for filemanager/codeable
 //core data doesnt use this file, need to be commend out or delete since it use the same name
 /*class Item : Codable/* consist of both Encodable, Decodable*/{
     var title : String = ""
