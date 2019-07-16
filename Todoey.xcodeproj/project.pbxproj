@@ -14,6 +14,7 @@
 		9918617E222E82FB00539412 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9918617C222E82FB00539412 /* LaunchScreen.storyboard */; };
 		9934FC7622328DB30043E4F2 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9934FC7422328DB30043E4F2 /* DataModel.xcdatamodeld */; };
 		99779D0C222FF22400572D5A /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99779D0B222FF22400572D5A /* Item.swift */; };
+		99B01274223FE15A00ED46A4 /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B01273223FE15A00ED46A4 /* SwipeTableViewController.swift */; };
 		99C1EAC6223BD498001D0788 /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C1EAC5223BD498001D0788 /* Items.swift */; };
 		99C1EAC8223BD4AB001D0788 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99C1EAC7223BD4AB001D0788 /* Categories.swift */; };
 		99F3317C223AAB7300105D74 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F3317B223AAB7300105D74 /* CategoryViewController.swift */; };
@@ -32,6 +33,7 @@
 		9918617F222E82FB00539412 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9934FC7522328DB30043E4F2 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		99779D0B222FF22400572D5A /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		99B01273223FE15A00ED46A4 /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		99C1EAC5223BD498001D0788 /* Items.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		99C1EAC7223BD4AB001D0788 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
 		99F3317B223AAB7300105D74 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				99186173222E82F900539412 /* AppDelegate.swift */,
 				99186175222E82F900539412 /* TodoListViewController.swift */,
 				99F3317B223AAB7300105D74 /* CategoryViewController.swift */,
+				99B01273223FE15A00ED46A4 /* SwipeTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 				TargetAttributes = {
 					9918616F222E82F900539412 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -235,15 +239,19 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Todoey/Pods-Todoey-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -257,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99B01274223FE15A00ED46A4 /* SwipeTableViewController.swift in Sources */,
 				99F3317C223AAB7300105D74 /* CategoryViewController.swift in Sources */,
 				99C1EAC8223BD4AB001D0788 /* Categories.swift in Sources */,
 				99186176222E82F900539412 /* TodoListViewController.swift in Sources */,
@@ -419,7 +428,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanmartin.Todoey;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -438,7 +447,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.ivanmartin.Todoey;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

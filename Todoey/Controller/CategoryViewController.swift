@@ -9,8 +9,9 @@
 import UIKit
 //import CoreData
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
     //for realm
     let realm = try! Realm()
@@ -31,6 +32,9 @@ class CategoryViewController: UITableViewController {
         //for realm (disable if you want to test the default value)
         loadCategories()
         
+        //for swipecell
+//        tableView.rowHeight = 80.0
+        
     }
     
     //MARK: - TableView datasource methods
@@ -43,14 +47,27 @@ class CategoryViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //for super class swiptetable
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+        
         //for coredata
 //        let category = categoryArray[indexPath.row]
 //        cell.textLabel?.text = category.name
         
         //for realm
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet"
+        if let category = categories?[indexPath.row]{
+            
+            guard let categoryColour = UIColor(hexString: category.colour) else {fatalError()}
+            cell.textLabel?.text = category.name
+            cell.backgroundColor = categoryColour
+            cell.textLabel?.textColor = ContrastColorOf(categoryColour, returnFlat: true)
+            
+        }
+        else{
+            cell.textLabel?.text = "No categories added yet"
+        }
         return cell
     }
     
@@ -89,6 +106,7 @@ class CategoryViewController: UITableViewController {
                 //for realm
                 let newCategory = Categories()
                 newCategory.name = textfield.text!
+                newCategory.colour = UIColor.randomFlat.hexValue()
                 /*appending is not require because it is auto update*/
                 self.saveCategories(categories: newCategory)
             }
@@ -139,9 +157,24 @@ class CategoryViewController: UITableViewController {
         }
         tableView.reloadData()
     }
-    
+    //load
     func loadCategories(){
         categories = realm.objects(Categories.self)
         tableView.reloadData()
+    }
+    //delete
+    override func updateModel(at indexPath: IndexPath) {
+        //for realm
+        if let category = categories?[indexPath.row] {
+            do{
+                try realm.write {
+                    //MARK: - Realm Delete
+                    realm.delete(category)
+                    //no need tablereload for delete using swipe
+                }
+            }catch{
+                print("error deleting category, \(error)")
+            }
+        }
     }
 }
